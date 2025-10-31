@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <!-- Embedded CSS -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-blue: #1a237e;
+            --dark-blue: #0d1253;
+            --light-blue: #448aff;
+            --white-color: #ffffff;
+            --grey-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--dark-blue);
+            color: var(--white-color);
+        }
+
+        .container {
+            display: flex;
+            background-color: var(--primary-blue);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 1200px;
+            min-height: 600px;
+            overflow: hidden;
+        }
+
+        .intro-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            background-color: var(--primary-blue);
+            border-right: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .intro-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .intro-section p {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--grey-color);
+        }
+
+        .intro-section img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: var(--dark-blue);
+        }
+
+        .form-section h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        #signupForm {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--grey-color);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--light-blue);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #3f7de0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 90%;
+                min-height: auto;
+            }
+            
+            .intro-section, .form-section {
+                border-right: none;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="intro-section">
+            <h1>Welcome!Lets Predict todays rainfall</h1>
+            <p>To keep connected with us please login with your personal info</p>
+            <img src="https://via.placeholder.com/300" alt="Finance illustration">
+        </div>
+        <div class="form-section">
+            <h2>Create Account</h2>
+            <form id="signupForm">
+                <div class="input-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <!-- Password field removed -->
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Embedded JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signupForm');
+
+            const handleFormSubmit = (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+
+                if (validateForm(name, email)) {
+                    alert(`Thank you, ${name}! Your account has been created.`);
+                    window.location.href = "2page.html"; // Redirect
+                }
+            };
+
+            const validateForm = (name, email) => {
+                if (name.trim() === '' || email.trim() === '') {
+                    alert('Please fill out all fields.');
+                    return false;
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Please enter a valid email address.');
+                    return false;
+                }
+                return true;
+            };
+
+            signupForm.addEventListener('submit', handleFormSubmit);
+        });
+    </script>
+</body>
+</html>
