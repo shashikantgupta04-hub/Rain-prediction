@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Rainfall Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a237e;
+            --dark-blue: #0d1253;
+            --light-blue: #448aff;
+            --white-color: #ffffff;
+            --grey-color: #e0e0e0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--dark-blue);
+            color: var(--white-color);
+            padding: 2rem;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--primary-blue);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 1200px;
+            min-height: 600px;
+            overflow: hidden;
+        }
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+        .intro-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            background-color: var(--primary-blue);
+            border-right: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .intro-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .intro-section p {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--grey-color);
+        }
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: var(--dark-blue);
+        }
+        .form-section h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        #predictionForm {
+            width: 100%;
+            max-width: 400px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--grey-color);
+        }
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+        }
+        .input-group select:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--light-blue);
+        }
+        .input-group option {
+            background-color: var(--dark-blue);
+            color: var(--white-color);
+        }
+        .button-box {
+            background-color: var(--primary-blue);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #3f7de0;
+            transform: translateY(-2px);
+        }
+        .result-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .result-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .result-section p {
+            font-size: 1rem;
+            color: var(--grey-color);
+        }
+        .result-section #prediction-result {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white-color);
+        }
+        #datetime-display {
+            font-size: 0.9rem;
+            color: var(--grey-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .container {
+                width: 90%;
+                min-height: auto;
+            }
+            .intro-section {
+                border-right: none;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="intro-section">
+                <h1>Find Your Rainfall Predication</h1>
+                <p>Select your location to get a simulated rainfall prediction.</p>
+            </div>
+            <div class="form-section">
+                <div id="datetime-display"></div>
+                <h2>Get Prediction</h2>
+                <form id="predictionForm">
+                    <div class="input-group">
+                        <label for="state-select">Select State</label>
+                        <select id="state-select" required>
+                            <option value="" disabled selected>-- Select an Indian State --</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="date-select">Select Date</label>
+                        <select id="date-select" required>
+                            <option value="" disabled selected>-- Select a Date --</option>
+                        </select>
+                    </div>
+                    <div class="button-box">
+                        <button type="submit" id="getBasicPrediction">Get Prediction</button>
+                    </div>
+                    <div class="button-box">
+                        <button type="button" id="getDetailedPrediction">Get Detailed Prediction</button>
+                    </div>
+                </form>
+                <div class="result-section">
+                    <h3>Prediction for: <span id="predicted-location">...</span></h3>
+                    <p id="prediction-result" class="text-white text-3xl font-bold mt-2">...</p>
+                    <p id="prediction-message" class="text-gray-400 mt-2">Select a state and a date to get the forecast.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const indianStates = [
+                "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+                "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra",
+                "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+                "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+            ];
+            
+            const stateSelect = document.getElementById('state-select');
+            indianStates.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+
+            const dateSelect = document.getElementById('date-select');
+            const today = new Date();
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const formattedDate = date.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' });
+                const option = document.createElement('option');
+                option.value = date.toISOString().split('T')[0];
+                option.textContent = formattedDate;
+                dateSelect.appendChild(option);
+            }
+
+            const form = document.getElementById('predictionForm');
+            const predictedLocation = document.getElementById('predicted-location');
+            const predictionResult = document.getElementById('prediction-result');
+            const predictionMessage = document.getElementById('prediction-message');
+            const datetimeDisplay = document.getElementById('datetime-display');
+            const getDetailedButton = document.getElementById('getDetailedPrediction');
+
+            const updateDateTime = () => {
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                const formattedDateTime = now.toLocaleDateString('en-IN', options);
+                datetimeDisplay.textContent = formattedDateTime;
+            };
+
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const selectedState = stateSelect.value;
+                const selectedDate = new Date(dateSelect.value);
+                const formattedDate = selectedDate.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+                predictedLocation.textContent = `${selectedState} on ${formattedDate}`;
+
+                let resultText = '';
+                let messageText = '';
+
+                let predictionScore = 0;
+                const random = Math.random();
+
+                // Base prediction score based on state
+                switch(selectedState) {
+                    case 'Meghalaya':
+                    case 'Assam':
+                    case 'Kerala':
+                    case 'Goa':
+                    case 'Sikkim':
+                    case 'West Bengal':
+                        predictionScore += 70;
+                        break;
+                    case 'Rajasthan':
+                    case 'Gujarat':
+                    case 'Haryana':
+                    case 'Punjab':
+                        predictionScore += 10;
+                        break;
+                    default:
+                        predictionScore += 40;
+                        break;
+                }
+
+                if (predictionScore > 80) {
+                    resultText = 'High Chance of Rain';
+                    messageText = 'Heavy rainfall is likely. Stay prepared!';
+                } else if (predictionScore > 40) {
+                    resultText = 'Moderate Chance of Rain';
+                    messageText = 'There is a possibility of rain. Keep an umbrella handy.';
+                } else {
+                    resultText = 'Low Chance of Rain';
+                    messageText = 'It is likely to be a clear, sunny day.';
+                }
+                
+                predictionResult.textContent = resultText;
+                predictionMessage.textContent = messageText;
+            });
+            
+            getDetailedButton.addEventListener('click', () => {
+                const selectedState = stateSelect.value;
+                const selectedDate = dateSelect.value;
+                if (selectedState && selectedDate) {
+                    window.location.href = '3page.html?state=${encodeURIComponent(selectedState)}&date=${encodeURIComponent(selectedDate)}'
+                } else {
+                    // Use a custom message box instead of alert()
+                    const messageBox = document.createElement('div');
+                    messageBox.style.cssText = `
+                        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                        background-color: var(--dark-blue); color: var(--white-color); padding: 20px;
+                        border-radius: 10px; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+                        text-align: center; max-width: 300px;
+                    `;
+                    messageBox.innerHTML = `
+                        <p>Please select both a state and a date to get a detailed prediction.</p>
+                        <button onclick="this.parentElement.remove()" style="margin-top: 15px; padding: 10px 20px; background-color: var(--light-blue); color: var(--primary-blue); border: none; border-radius: 8px; cursor: pointer;">OK</button>
+                    `;
+                    document.body.appendChild(messageBox);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
