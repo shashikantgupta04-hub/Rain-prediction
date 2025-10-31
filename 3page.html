@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainfall Prediction App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-blue: #1a237e;
+            --dark-blue: #0d1253;
+            --light-blue: #448aff;
+            --white-color: #ffffff;
+            --grey-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--dark-blue);
+            color: var(--white-color);
+            padding: 2rem;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--primary-blue);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            font-size: 1rem;
+            color: var(--grey-color);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+        }
+        
+        .input-section, .result-section {
+            flex: 1;
+            background-color: var(--dark-blue);
+            padding: 2rem;
+            border-radius: 10px;
+        }
+
+        .result-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--grey-color);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--light-blue);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #3f7de0;
+            transform: translateY(-2px);
+        }
+
+        #prediction-result {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+
+        #prediction-message {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            color: var(--grey-color);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>Rainfall Prediction </h1>
+            <p>Enter the weather data below to get a prediction.</p>
+        </div>
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Enter Data</h2>
+                <form id="predictionForm">
+                    <div class="input-group">
+                        <label for="temperature">Temperature (°C)</label>
+                        <input type="number" id="temperature" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="pressure">Atmospheric Pressure (hPa)</label>
+                        <input type="number" id="pressure" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="humidity">Humidity (%)</label>
+                        <input type="number" id="humidity" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="wind-speed">Wind Speed (km/h)</label>
+                        <input type="number" id="wind-speed" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="wind-direction">Wind Direction (degrees)</label>
+                        <input type="number" id="wind-direction" required>
+                    </div>
+                    <button type="submit">Get Prediction</button>
+                </form>
+            </div>
+            <div class="result-section">
+                <h2>Prediction Result</h2>
+                <div id="prediction-result" class="text-white text-5xl font-bold">...</div>
+                <div id="prediction-message" class="text-gray-400 mt-2">Enter data to see the forecast.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('predictionForm');
+            const resultDiv = document.getElementById('prediction-result');
+            const messageDiv = document.getElementById('prediction-message');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const temperature = parseFloat(document.getElementById('temperature').value);
+                const pressure = parseFloat(document.getElementById('pressure').value);
+                const humidity = parseFloat(document.getElementById('humidity').value);
+                const windSpeed = parseFloat(document.getElementById('wind-speed').value);
+                const windDirection = parseFloat(document.getElementById('wind-direction').value);
+
+                // Simple simulated prediction logic
+                // This is a placeholder. A real app would use a machine learning model.
+                let predictionScore = 0;
+                
+                // Higher humidity increases rain probability
+                predictionScore += humidity * 0.5;
+                
+                // Lower pressure increases rain probability
+                predictionScore += (1000 - pressure) * 0.8;
+                
+                // Moderate temperature increases rain probability
+                if (temperature > 20 && temperature < 30) {
+                    predictionScore += 10;
+                }
+                
+                // Higher wind speed can increase or decrease based on direction, but we'll simulate a general effect
+                predictionScore += windSpeed * 0.1;
+
+                let predictionText;
+                let messageText;
+                
+                if (predictionScore > 100) {
+                    predictionText = 'High Chance';
+                    messageText = 'Heavy rainfall is likely. Stay prepared!';
+                } else if (predictionScore > 50) {
+                    predictionText = 'Moderate Chance';
+                    messageText = 'There is a possibility of rain. Keep an umbrella handy.';
+                } else {
+                    predictionText = 'Low Chance';
+                    messageText = 'It is likely to be a clear day.';
+                }
+                
+                resultDiv.textContent = predictionText;
+                messageDiv.textContent = messageText;
+            });
+        });
+    </script>
+</body>
+</html>
